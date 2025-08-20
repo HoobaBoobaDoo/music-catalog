@@ -11,7 +11,8 @@ class StoreAlbumRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+    // Allow authenticated users (route middleware handles auth)
+    return true;
     }
 
     /**
@@ -22,7 +23,13 @@ class StoreAlbumRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['required', 'string', 'max:255'],
+            'artist' => ['required', 'string', 'max:255'],
+            'release_date' => ['required', 'date'],
+            'genre' => ['required', 'string', 'max:100'],
+            'songs' => ['nullable', 'string'],
+            'producer' => ['nullable', 'string', 'max:255'],
+            'image' => ['required', 'image', 'max:2048'],
         ];
     }
 }

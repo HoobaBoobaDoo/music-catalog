@@ -17,43 +17,33 @@
         <table aria-label="Records table">
             <thead>
                 <tr>
+                    <th>Cover</th>
                     <th>Title</th>
                     <th>Artist</th>
+                    <th class="small">Genre</th>
+                    <th class="small">Producer</th>
+                    <th class="small">Songs</th>
                     <th class="small">Release Date</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Song 1</td>
-                    <td>Artist A</td>
-                    <td class="small">2024-01-01</td>
-                </tr>
-                <tr>
-                    <td>Song 2</td>
-                    <td>Artist B</td>
-                    <td class="small">2023-01-01</td>
-                </tr>
-                <tr>
-                    <td>Song 3</td>
-                    <td>Artist C</td>
-                    <td class="small">2022-01-01</td>
-                </tr>
-                <tr>
-                    <td>Song 4</td>
-                    <td>Artist D</td>
-                    <td class="small">2021-01-01</td>
-                </tr>
-                <tr>
-                    <td>Song 5</td>
-                    <td>Artist E</td>
-                    <td class="small">2020-01-01</td>
-                </tr>
+                @foreach ($albums as $album)
+                    <tr>
+                        <td><img src="{{ asset('storage/' . $album->image) }}" alt="Cover for {{ $album->title }}" style="max-width:60px;max-height:60px;object-fit:cover;border-radius:4px"/></td>
+                        <td>{{ $album->title }}</td>
+                        <td>{{ $album->artist }}</td>
+                        <td>{{$album->genre}}</td>
+                        <td>{{$album->producer}}</td>
+                        <td>{{$album->songs}}</td>
+                        <td class="small">{{ $album->release_date }}</td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
     </section>
     <section class="card">
         {{-- prettier album form --}}
-        <form method="POST" action="#" enctype="multipart/form-data" class="album-form">
+    <form method="POST" action="{{ route('albums.store') }}" class="album-form" enctype="multipart/form-data">
             @csrf
             <h2 style="margin-bottom:12px">Add an album</h2>
 
@@ -69,8 +59,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="date">Release Date</label>
-                    <input id="date" name="date" type="date" required>
+                    <label for="release_date">Release Date</label>
+                    <input id="release_date" name="release_date" type="date" required>
                 </div>
 
                 <div class="form-group">
@@ -100,8 +90,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="cover">Cover Image</label>
-                    <input id="cover" name="cover" type="file" accept="image/*">
+                    <label for="image">Cover Image</label>
+                    <input id="image" name="image" type="file" accept="image/*">
                     <div class="cover-preview" aria-hidden="true">
                         <img id="coverPreview" src="#" alt="Cover preview" style="display:none">
                     </div>

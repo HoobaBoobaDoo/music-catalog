@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Album;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreAlbumRequest;
 use App\Http\Requests\UpdateAlbumRequest;
 
@@ -11,9 +12,18 @@ class AlbumController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        // Fetch albums with optional filtering, sorting, and pagination
+        $query = Album::query();
+
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%' . $request->input('search') . '%');
+        }
+
+        $albums = $query->paginate(10);
+
+        return view('admin.records', compact('albums'));
     }
 
     /**
@@ -21,7 +31,7 @@ class AlbumController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -29,7 +39,20 @@ class AlbumController extends Controller
      */
     public function store(StoreAlbumRequest $request)
     {
-        //
+        // Use validated data from the form request
+        $data = $request->validated();
+
+        // Handle uploaded image if present
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('images/albums', 'public');
+        }
+
+        // Attach creator id if authenticated
+        $data['created_by'] = auth()->id();
+
+        Album::create($data);
+
+        return redirect('/admin/records')->with('success', 'Album created successfully.');
     }
 
     /**
