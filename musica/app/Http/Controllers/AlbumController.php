@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Album;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAlbumRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+
 use App\Http\Requests\UpdateAlbumRequest;
 
 class AlbumController extends Controller
@@ -84,6 +88,19 @@ class AlbumController extends Controller
      */
     public function destroy(Album $album)
     {
-        //
+        try {
+            // remove stored cover file if present
+            if (!empty($album->image) && Storage::disk('public')->exists($album->image)) {
+                Storage::disk('public')->delete($album->image);
+            }
+
+            // If model uses SoftDeletes, this will soft-delete. Change to forceDelete() if you want permanent removal.
+            $album->delete();
+
+            return redirect('/admin/records')->with('success', 'Album deleted successfully.');
+        } catch (\Throwable $e) {
+            Log::error('Album deletion failed', ['id' => $album->id ?? null, 'error' => $e->getMessage()]);
+            return redirect('/admin/records')->with('error', 'Failed to delete album. Check logs.');
+        }
     }
 }

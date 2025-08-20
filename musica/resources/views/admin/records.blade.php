@@ -24,6 +24,7 @@
                     <th class="small">Producer</th>
                     <th class="small">Songs</th>
                     <th class="small">Release Date</th>
+                    <th class="small">Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,6 +37,15 @@
                         <td>{{$album->producer}}</td>
                         <td>{{$album->songs}}</td>
                         <td class="small">{{ $album->release_date }}</td>
+                        <td>
+    <form action="{{ route('albums.destroy', $album) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this album?')">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-danger btn-sm w-100 p-3" style="background: linear-gradient(45deg, #dc3545, #e91e63); border: none; border-radius: 10px; font-weight: bold; transition: all 0.3s ease;">
+            <i class="bi bi-trash me-1"></i>&nbsp;X
+        </button>
+    </form>
+</td>
                     </tr>
                 @endforeach
             </tbody>

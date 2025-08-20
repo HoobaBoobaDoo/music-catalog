@@ -25,3 +25,7 @@ Route::post('/login', [UserController::class, 'login'])->name('login');
 
 //Album controller stuff
 Route::post('/admin/records', [AlbumController::class, 'store'])->name('albums.store')->middleware('auth');
+
+Route::delete('/admin/records/{album}', [AlbumController::class, 'destroy'])
+    ->name('albums.destroy')
+    ->middleware('auth');
