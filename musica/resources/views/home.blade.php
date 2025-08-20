@@ -5,7 +5,7 @@
 @section('content')
 @auth
     <section class="hero card">
-        <h1>Welcome to Musica</h1>
+        <h1>Welcome to Musica, {{ auth()->user()->name }}</h1>
         <h5>Your one-stop solution for all music needs</h5>
         <div class="actions">
             <a class="btn" href="/admin/records">Browse Catalog</a>
@@ -27,12 +27,12 @@
             <form method="POST" action="/login" class="login-form">
                 @csrf
                 <div class="form-group">
-                    <label for="email">E‑mail</label>
-                    <input id="email" name="email" type="email" placeholder="Enter your email">
+                    <label for="loginname">Name</label>
+                    <input id="name" name="loginname" type="text" placeholder="Enter your name">
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input id="password" name="password" type="password" placeholder="Enter your password">
+                    <input id="password" name="loginpassword" type="password" placeholder="Enter your password">
                 </div>
                 <button type="submit" class="btn">Login</button>
             </form>

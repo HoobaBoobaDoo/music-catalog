@@ -82,6 +82,14 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="/contact">Contact</a></li>
                 <li><a href="/admin/records">Admin</a></li>
+                @auth
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="btn secondary">Logout</button>
+                        </form>
+                    </li>
+                @endauth
             </ul>
         </nav>
     </header>

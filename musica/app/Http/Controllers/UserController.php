@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
@@ -28,7 +31,7 @@ class UserController extends Controller
         $data = $request->validate([
             'name' => ['required', 'min:3', 'max:20', Rule::unique('users', 'name')],
             'email' => ['required', 'email', Rule::unique('users', 'email')],
-            'password' => ['required', 'min:8', 'max:200'],
+            'password' => ['required', 'min:4', 'max:200'],
         ]);
         
         $data['password'] = bcrypt($data['password']);
