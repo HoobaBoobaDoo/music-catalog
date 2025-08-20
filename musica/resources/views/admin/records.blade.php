@@ -52,16 +52,107 @@
         </table>
     </section>
     <section class="card">
-        <form>
-        <h1>Add an album!</h1>
-        <input type="text" name="title" placeholder="Title" required>
-        <input type="text" name="artist" placeholder="Artist" required>
-        <input type="date" name="date" placeholder="Release Date" required>
-        <input type="text" name="genre" id="genre" placeholder="Genre" required>
-        <input type="text" name="songs" placeholder="Songs" required>
-        <input type="text" name="producer" placeholder="Producer" required>
-        <input type="image" name="cover" placeholder="Cover Image" required>
-        <button type="submit" class="btn">Send</button>
+        {{-- prettier album form --}}
+        <form method="POST" action="#" enctype="multipart/form-data" class="album-form">
+            @csrf
+            <h2 style="margin-bottom:12px">Add an album</h2>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input id="title" name="title" type="text" placeholder="Album title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="artist">Artist</label>
+                    <input id="artist" name="artist" type="text" placeholder="Artist name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Release Date</label>
+                    <input id="date" name="date" type="date" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="genre">Genre</label>
+                    <input id="genre" name="genre" list="genres" placeholder="Choose or type a genre" required>
+                    <datalist id="genres">
+                        <option>Rock</option>
+                        <option>Pop</option>
+                        <option>Jazz</option>
+                        <option>Electronic</option>
+                        <option>Hip Hop</option>
+                        <option>Classical</option>
+                        <option>Folk</option>
+                    </datalist>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="songs">Songs (one per line)</label>
+                <textarea id="songs" name="songs" rows="4" placeholder="Track 1&#10;Track 2&#10;Track 3" required></textarea>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="producer">Producer</label>
+                    <input id="producer" name="producer" type="text" placeholder="Producer name">
+                </div>
+
+                <div class="form-group">
+                    <label for="cover">Cover Image</label>
+                    <input id="cover" name="cover" type="file" accept="image/*">
+                    <div class="cover-preview" aria-hidden="true">
+                        <img id="coverPreview" src="#" alt="Cover preview" style="display:none">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions" style="margin-top:12px">
+                <button type="submit" class="btn">Add Album</button>
+            </div>
         </form>
+
+        {{-- scoped styles --}}
+        <style>
+            .album-form { max-width: 820px; }
+            .album-form .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+            .album-form .form-group { display:flex; flex-direction:column; }
+            .album-form label { font-weight:600; margin-bottom:6px; font-size:0.95rem; }
+            .album-form input[type="text"],
+            .album-form input[type="date"],
+            .album-form input[list],
+            .album-form input[type="file"],
+            .album-form textarea {
+                padding:10px; border:1px solid #d0d0d0; border-radius:6px; font-size:0.95rem;
+                background:#fff; outline:none;
+            }
+            .album-form input:focus, .album-form textarea:focus { border-color:#7aa7ff; box-shadow:0 0 0 3px rgba(122,167,255,0.12); }
+            .cover-preview img { max-width:140px; max-height:140px; object-fit:cover; border-radius:6px; margin-top:8px; border:1px solid #e6e6e6; }
+            .form-actions { text-align:right; }
+            @media (max-width:700px) {
+                .album-form .form-grid { grid-template-columns: 1fr; }
+                .form-actions { text-align:left; }
+            }
+        </style>
+
+        {{-- small script for cover preview --}}
+        <script>
+            (function(){
+                const cover = document.getElementById('cover');
+                const preview = document.getElementById('coverPreview');
+                if (!cover || !preview) return;
+                cover.addEventListener('change', function(e){
+                    const file = e.target.files && e.target.files[0];
+                    if (!file) { preview.src = '#'; preview.style.display = 'none'; return; }
+                    const reader = new FileReader();
+                    reader.onload = function(ev){
+                        preview.src = ev.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                });
+            })();
+        </script>
     </section>
 @endsection
